@@ -7,6 +7,7 @@ import {
   ScrollView,
   TextInput,
   Button,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -22,7 +23,7 @@ export default function HomeScreen() {
 
   const addGoalHandler = () => {
     setGoals((currentGoals) => [...currentGoals, enteredGoal]);
-    setEnteredGoal(""); // Clear the input field after adding the goal
+    // setEnteredGoal(""); // Clear the input field after adding the goal
   };
   // justify-center min-h-[100vh]
   return (
@@ -39,16 +40,16 @@ export default function HomeScreen() {
         </View>
         <Text className="flex mt-8 bg-slate-200 text-xl">List of Goals...</Text>
         <View>
-          <ScrollView>
-            {goals.map((goal, index) => (
-              <View
-                key={index}
-                className="mt-2 text-xl bg-blue-200 border rounded-lg p-2 mb-2 "
-              >
-                <Text className="text-red-800">{goal}</Text>
-              </View>
-            ))}
-          </ScrollView>
+          <FlatList
+            data={goals}
+            renderItem={(iitemData) => {
+              return (
+                <View className="mt-2 text-xl bg-blue-200 border rounded-lg p-2 mb-2 ">
+                  <Text className="text-red-800">{iitemData.item}</Text>
+                </View>
+              );
+            }}
+          />
         </View>
       </View>
     </SafeAreaView>
