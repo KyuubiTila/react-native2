@@ -1,70 +1,56 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import {
+  Image,
+  Platform,
+  View,
+  Text,
+  StatusBar,
+  ScrollView,
+  TextInput,
+  Button,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { useState } from "react";
 
 export default function HomeScreen() {
+  const [enteredGoal, setEnteredGoal] = useState<string>("");
+  const [goals, setGoals] = useState<string[]>([]);
+
+  const goalInputHandler = (inputText: string) => {
+    setEnteredGoal(inputText);
+  };
+
+  const addGoalHandler = () => {
+    setGoals((currentGoals) => [...currentGoals, enteredGoal]);
+    setEnteredGoal(""); // Clear the input field after adding the goal
+  };
+  // justify-center min-h-[100vh]
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView className="bg-green-300 h-full">
+      <View className="w-full px-4 ">
+        <View className="items-center flex-row justify-between  pb-8 border-b border-b-gray-800">
+          <TextInput
+            className="w-4/5 border text-sm rounded p-2 border-blue-900"
+            placeholder="Your course goals"
+            onChangeText={goalInputHandler}
+            value={enteredGoal}
+          />
+          <Button color="#841584" title="Add Goal" onPress={addGoalHandler} />
+        </View>
+        <Text className="flex mt-8 bg-slate-200 text-xl">List of Goals...</Text>
+        <View>
+          <ScrollView>
+            {goals.map((goal, index) => (
+              <View
+                key={index}
+                className="mt-2 text-xl bg-blue-200 border rounded-lg p-2 mb-2 "
+              >
+                <Text className="text-red-800">{goal}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
