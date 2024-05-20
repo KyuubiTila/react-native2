@@ -1,54 +1,64 @@
-import {
-  Image,
-  Platform,
-  View,
-  Text,
-  StatusBar,
-  ScrollView,
-  TextInput,
-  Button,
-  FlatList,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-import { useState } from "react";
+import GoalItem from "@/components/GoalItem";
+import GoalInput from "@/components/GoalInput";
 
 export default function HomeScreen() {
   const [enteredGoal, setEnteredGoal] = useState<string>("");
   const [goals, setGoals] = useState<string[]>([]);
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalIsVisible((prevState) => !prevState);
+  };
 
   const goalInputHandler = (inputText: string) => {
     setEnteredGoal(inputText);
   };
 
   const addGoalHandler = () => {
+    if (enteredGoal.trim().length === 0) {
+      return;
+    }
     setGoals((currentGoals) => [...currentGoals, enteredGoal]);
-    // setEnteredGoal(""); // Clear the input field after adding the goal
+    toggleModal();
+    setEnteredGoal("");
   };
-  // justify-center min-h-[100vh]
+
+  const deleteGoalHandler = (goalIndex: number) => {
+    setGoals((currentGoals) =>
+      currentGoals.filter((_, index) => index !== goalIndex)
+    );
+  };
+
   return (
-    <SafeAreaView className="bg-green-300 h-full">
+    <SafeAreaView className="bg-yellow-500 h-full">
+      <View className="bg-blue-400 border rounded-xl mx-4 ">
+        <Button title="Add new goal" color={"black"} onPress={toggleModal} />
+      </View>
       <View className="w-full px-4 ">
-        <View className="items-center flex-row justify-between  pb-8 border-b border-b-gray-800">
-          <TextInput
-            className="w-4/5 border text-sm rounded p-2 border-blue-900"
-            placeholder="Your course goals"
-            onChangeText={goalInputHandler}
-            value={enteredGoal}
+        {modalIsVisible && (
+          <GoalInput
+            goalInputHandler={goalInputHandler}
+            addGoalHandler={addGoalHandler}
+            enteredGoal={enteredGoal}
+            toggleModal={toggleModal}
           />
-          <Button color="#841584" title="Add Goal" onPress={addGoalHandler} />
+        )}
+        <View className="bg-blue-200 border items-center rounded-xl   mt-8 p-2 ">
+          <Text className="text-xl">LIST OF GOALS...</Text>
         </View>
-        <Text className="flex mt-8 bg-slate-200 text-xl">List of Goals...</Text>
         <View>
           <FlatList
             data={goals}
-            renderItem={(iitemData) => {
-              return (
-                <View className="mt-2 text-xl bg-blue-200 border rounded-lg p-2 mb-2 ">
-                  <Text className="text-red-800">{iitemData.item}</Text>
-                </View>
-              );
-            }}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <GoalItem
+                itemData={{ item }}
+                deleteGoal={() => deleteGoalHandler(index)}
+              />
+            )}
           />
         </View>
       </View>
