@@ -3,6 +3,7 @@ import { View, Text, Button, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GoalItem from "@/components/GoalItem";
 import GoalInput from "@/components/GoalInput";
+import { router } from "expo-router";
 
 export default function HomeScreen() {
   const [enteredGoal, setEnteredGoal] = useState<string>("");
@@ -55,9 +56,20 @@ export default function HomeScreen() {
     setEnteredGoal(goals[goalIndex]);
     toggleModal();
   };
-
   return (
     <SafeAreaView className="bg-yellow-500 h-full">
+      {/* <Pressable onPress={() => router.push("/")}>
+        <View className="  mx-4  mb-2">
+          <Text className="text-xl">Return Home</Text>
+        </View>
+      </Pressable> */}
+      <View className="bg-pink-400 border rounded-xl mx-4  mb-2">
+        <Button
+          title="Return Home"
+          color={"black"}
+          onPress={() => router.push("/")}
+        />
+      </View>
       <View className="bg-blue-400 border rounded-xl mx-4 ">
         <Button title="Add new goal" color={"black"} onPress={toggleModal} />
       </View>

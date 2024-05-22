@@ -5,14 +5,12 @@ const GoalInput = ({
   goalInputHandler,
   addGoalHandler,
   enteredGoal,
-  toggleModal,
   isEditing,
   toggleModalCancel,
 }: {
   goalInputHandler: (inputText: string) => void;
   addGoalHandler: () => void;
   enteredGoal: string;
-  toggleModal: any;
   isEditing: boolean;
   toggleModalCancel: any;
 }) => {
